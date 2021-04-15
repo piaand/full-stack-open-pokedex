@@ -47,7 +47,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BUMP: patch
-      - name: notify success at slack
+      - name: notify failure at slack
         uses: 8398a7/action-slack@v3
         with:
               status: ${{ job.status }}
@@ -55,18 +55,18 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
         if: ${{ failure() }}
-      - name: notify failure at slack
+      - name: notify success at slack
         uses: 8398a7/action-slack@v3
         with:
-        status: custom
-        fields: workflow,job,commit,repo,ref,author,took
-        custom_payload: |
-          {
-            attachments: [{
-              color: 'good'
-              text: `A new version deployed to https://pokedex-fullstack.herokuapp.com/  (${process.env.AS_COMMIT}) by ${process.env.AS_AUTHOR} - build took ${process.env.AS_TOOK}`,
-            }]
-          }
+              status: custom
+              fields: workflow,job,commit,repo,ref,author,took
+              custom_payload: |
+                {
+                  attachments: [{
+                    color: 'good'
+                    text: `A new version deployed to https://pokedex-fullstack.herokuapp.com/  (${process.env.AS_COMMIT}) by ${process.env.AS_AUTHOR} - build took ${process.env.AS_TOOK}`,
+                  }]
+                }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: ${{ success() }}
